@@ -42,6 +42,7 @@
             [(ngModel)]="CONTENT_OTHERDATA.message"></textarea>
 
         <ion-button id="go" style="width: 1em; height: 1em; margin: 0;"
+            color="danger"
             core-site-plugins-call-ws
             name="block_openai_chat_answer"
             component="block_openai_chat" method="answer" samePage="true" showError="false"
