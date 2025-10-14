@@ -87,6 +87,7 @@ class mobile {
             'assistantname' => $assistantname,
             'showlabelscss' => $showlabelscss,
             'contextid' => $context->id,
+            'avatarurl' => (new \moodle_url('/blocks/openai_chat/pix/CICI-avatar-200px.png'))->out(false),
             'title' => $title,
         ];
 
