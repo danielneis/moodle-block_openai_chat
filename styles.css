@@ -323,3 +323,10 @@ ion-card.block_openai_chat .openai_message.bot {
         opacity: 1;
     }
 }
+
+:root {
+   --ion-color-ccaa: #a71917;
+}
+.ion-color-ccaa {
+    --ion-color-base: var(--ion-color-ccaa) !important;
+}
