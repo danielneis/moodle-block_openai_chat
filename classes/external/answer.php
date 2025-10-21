@@ -5,6 +5,7 @@ namespace block_openai_chat\external;
 use core_external\external_api;
 use core_external\external_function_parameters;
 use core_external\external_multiple_structure;
+use core_external\external_single_structure;
 use core_external\external_value;
 
 /**
@@ -22,30 +23,34 @@ class answer extends external_api {
      */
     public static function execute_parameters() {
         return new external_function_parameters(
-                array(
-                    'contextid' => new external_value(PARAM_INT, 'the context of the block', VALUE_REQUIRED),
-                    'message' => new external_value(PARAM_RAW, 'The message from user', VALUE_REQUIRED),
-                )
+            [
+                'contextid' => new external_value(PARAM_INT, 'the context of the block', VALUE_REQUIRED),
+                'message' => new external_value(PARAM_RAW, 'The message from user', VALUE_REQUIRED),
+                'history' => new external_value(PARAM_RAW, 'The message history', VALUE_DEFAULT, '', NULL_ALLOWED),
+            ]
         );
     }
 
     /**
-     * Get last accessed items by the logged user (activities or resources).
+     * Answer a prompt.
      *
      * @param  int $contextid Context Id of the block
      * @param  string $message Message from user
+     * @param  string $history History in json format
      * @return array List of items
      */
-    public static function execute(int $contextid, string $message) {
+    public static function execute(int $contextid, string $message, ?string $history) {
         global $DB;
 
         // Parameter validation.
         [
             'contextid' => $contextid,
             'message' => $message,
+            'history' => $history,
         ] = self::validate_parameters(self::execute_parameters(), [
             'contextid' => $contextid,
             'message' => $message,
+            'history' => $history,
         ]);
         // Context validation and permission check.
         // Get the context from the passed in ID.
@@ -57,6 +62,7 @@ class answer extends external_api {
         $instance_record = $DB->get_record('block_instances', ['blockname' => 'openai_chat', 'id' => $context->instanceid], '*');
         $instance = block_instance('openai_chat', $instance_record);
 
+        $thread_id = null;
         $block_settings = [];
         $setting_names = [
             'sourceoftruth', 
@@ -85,6 +91,7 @@ class answer extends external_api {
         $model = get_config('block_openai_chat', 'model');
         $api_type = get_config('block_openai_chat', 'type');
         $engine_class = "\block_openai_chat\completion\\$api_type";
+        $history = json_decode($history, true);
 
         $completion = new $engine_class(...[$model, $message, $history, $block_settings, $thread_id]);
         $response = $completion->create_completion($context);

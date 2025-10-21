@@ -10,6 +10,11 @@ this.answer = function(result) {
 
 this.update_history = function(msg) {
     let question = document.getElementById('openai_input').value;
+    let history = document.getElementById('openai_history');
+    let hst = [];
+    if ((history.value != undefined) && (history.value !== '')) {
+        hst = JSON.parse(history.value);
+    }
     if (question == '') {
     } else {
         document.getElementById('openai_input').value = '';
@@ -20,6 +25,7 @@ this.update_history = function(msg) {
                  '<ion-spinner name="crescent"></ion-spinner>' +
              '</ion-item>'
         );
+        hst.push({'user': 'User', 'message': question});
         let lq = document.querySelector('#openai_chat_log > :last-child');
         let container = document.querySelector('#openai_chat_log');
         container.scrollTop = lq.offsetTop;
@@ -32,8 +38,12 @@ this.update_history = function(msg) {
 
     let container = document.querySelector('#openai_chat_log');
     let lastMessage = document.querySelector('#openai_chat_log div:last-child');
+    hst.push({'user': assistantname.innerHTML, 'message': msg})
+    history.value = JSON.stringify(hst);
+
     container.scrollTop = lastMessage.offsetTop;
 };
 document.querySelector(`.block_openai_chat #refresh`).addEventListener('click', e => {
-    document.querySelector(`#openai_chat_log`).innerHTML = ""
+    document.getElementById('openai_history').value = "";
+    document.getElementById('openai_chat_log').innerHTML = "";
 })

@@ -29,34 +29,33 @@
 }}
 {{=<% %>=}}
 <div style="padding: 0 0.5em 0.5em 0.5em">
-<h3><img src="<% avatarurl %>" style="max-height: 3em; display: inline; vertical-align: middle;" /><% title %></h3>
-<div id="openai_chat_log" role="log"></div>
-<div id="control_bar">
-    <div class="openai_input_bar" id="input_bar">
-        <textarea 
-            style="background-color: white; color: black;"
-            aria-label="<%#str%>askaquestion, block_openai_chat<%/str%>"
-            rows=1 id="openai_input" placeholder="<%#str%>askaquestion, block_openai_chat<%/str%>"
-            type="text" name="message"
-            core-auto-rows
-            [(ngModel)]="CONTENT_OTHERDATA.message"></textarea>
+    <h3><img src="<% avatarurl %>" style="max-height: 3em; display: inline; vertical-align: middle;" /><% title %></h3>
+    <div id="openai_chat_log" role="log"></div>
+    <form id="openai-form">
+        <div id="control_bar">
+            <div class="openai_input_bar" id="input_bar">
+                <ion-input type="hidden" style="display: none;" id="openai_history" name="history" ></ion-input>
+                <ion-input type="hidden" style="display: none;" id="contextid" name="contextid" value="<% contextid %>" ></ion-input>
+                <textarea
+                    style="background-color: white; color: black;"
+                    aria-label="<%#str%>askaquestion, block_openai_chat<%/str%>"
+                    rows=1 id="openai_input" placeholder="<%#str%>askaquestion, block_openai_chat<%/str%>"
+                    name="message" core-auto-rows ></textarea>
 
-        <ion-button id="go" style="width: 1em; height: 1em; margin: 0;"
-            color="ccaa"
-            core-site-plugins-call-ws
-            name="block_openai_chat_answer"
-            component="block_openai_chat" method="answer" samePage="true" showError="false"
-            [params]="{contextid: <% contextid %>}"
-            (onSuccess)="this.answer($event)"
-            (onError)="this.answer($event)"
-            [useOtherDataForWS]="['message']"
-            ><img style="transform: scale(1.3)" src="<%config.wwwroot%><% pix_arrow_right %>" alt="<%#str%>askaquestion, block_openai_chat<%/str%>" class='openai_input_submit_btn_icon'>
-        </ion-button>
-    </div>
-    <ion-button class='openai_input_refresh_btn' style="width: 1em; height: 1em; margin: 0;" color="secondary"
-        title="<%#str%>new_chat, block_openai_chat <%/str%>" id="refresh">
-        <img style="transform: scale(1.3)" src="<%config.wwwroot%><% pix_refresh %>" class='openai_input_refresh_btn_icon' alt="<%#str%>new_chat, block_openai_chat <%/str%>" />
-    </ion-button>
-</div>
-<span style="display: none" id="openai_assistantname"><% assistantname %></span>
+                <ion-button id="go" style="width: 1em; height: 1em; margin: 0;" color="ccaa"
+                    core-site-plugins-call-ws
+                    name="block_openai_chat_answer"
+                    form="openai-form"
+                    (onSuccess)="this.answer($event)"
+                    (onError)="this.answer($event)"
+                    ><img style="transform: scale(1.3)" src="<%config.wwwroot%><% pix_arrow_right %>" alt="<%#str%>askaquestion, block_openai_chat<%/str%>" class='openai_input_submit_btn_icon'>
+                </ion-button>
+            </div>
+            <ion-button class='openai_input_refresh_btn' style="width: 1em; height: 1em; margin: 0;" color="secondary"
+                title="<%#str%>new_chat, block_openai_chat <%/str%>" id="refresh">
+                <img style="transform: scale(1.3)" src="<%config.wwwroot%><% pix_refresh %>" class='openai_input_refresh_btn_icon' alt="<%#str%>new_chat, block_openai_chat <%/str%>" />
+            </ion-button>
+        </div>
+    </form>
+    <span style="display: none" id="openai_assistantname"><% assistantname %></span>
 </div>
