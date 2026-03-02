@@ -23,15 +23,15 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$functions = array(
+$functions = [
 
-    'block_openai_chat_answer' => array(
+    'block_openai_chat_answer' => [
         'classpath'   => 'blocks/openai_chat/classes/external/answer.php',
         'classname'   => 'block_openai_chat\external\answer',
         'methodname'  => 'execute',
         'description' => 'Get answer.',
         'type'        => 'read',
         'ajax'        => true,
-        'services' => array(MOODLE_OFFICIAL_MOBILE_SERVICE),
-    ),
-);
+        'services' => [MOODLE_OFFICIAL_MOBILE_SERVICE],
+    ],
+];
