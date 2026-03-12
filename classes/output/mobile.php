@@ -40,7 +40,10 @@ class mobile {
 
         $persistconvo = get_config('block_openai_chat', 'persistconvo');
         if (!empty($config)) {
-            $persistconvo = (property_exists($config, 'persistconvo') && get_config('block_openai_chat', 'allowinstancesettings')) ? $config->persistconvo : $persistconvo;
+            $persistconvo = (property_exists($config, 'persistconvo') &&
+                get_config('block_openai_chat', 'allowinstancesettings'))
+                ? $config->persistconvo
+                : $persistconvo;
         }
 
         // Determine if name labels should be shown.
@@ -57,8 +60,12 @@ class mobile {
         }
 
         // First, fetch the global settings for these (and the defaults if not set)
-        $assistantname = get_config('block_openai_chat', 'assistantname') ? get_config('block_openai_chat', 'assistantname') : get_string('defaultassistantname', 'block_openai_chat');
-        $username = get_config('block_openai_chat', 'username') ? get_config('block_openai_chat', 'username') : get_string('defaultusername', 'block_openai_chat');
+        $assistantname = get_config('block_openai_chat', 'assistantname')
+            ? get_config('block_openai_chat', 'assistantname')
+            : get_string('defaultassistantname', 'block_openai_chat');
+        $username = get_config('block_openai_chat', 'username')
+            ? get_config('block_openai_chat', 'username')
+            : get_string('defaultusername', 'block_openai_chat');
 
         $title = get_string('openai_chat', 'block_openai_chat');
         $configdata = $DB->get_field('block_instances', 'configdata', ['id' => $context->instanceid]);
@@ -94,10 +101,10 @@ class mobile {
             'templates' => [
                 [
                     'id' => 'main',
-                    'html' => $OUTPUT->render_from_template('block_openai_chat/mobile', $contextdata)
+                    'html' => $OUTPUT->render_from_template('block_openai_chat/mobileapp/mobile', $contextdata)
                 ]
             ],
-            'javascript' => file_get_contents("{$CFG->dirroot}/blocks/openai_chat/mobile.js")
+            'javascript' => file_get_contents("{$CFG->dirroot}/blocks/openai_chat/js/mobileapp/mobile.js")
         ];
     }
 }

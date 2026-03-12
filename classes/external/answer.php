@@ -10,8 +10,8 @@ use core_external\external_value;
 /**
  * External API class.
  *
- * @package    block_recentlyaccesseditems
- * @copyright  2018 Victor Deniz <victor@moodle.com>
+ * @package    block_openai_chat
+ * @copyright  2025 Daniel Neis Araujo
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class answer extends external_api {
@@ -59,17 +59,17 @@ class answer extends external_api {
 
         $block_settings = [];
         $setting_names = [
-            'sourceoftruth', 
+            'sourceoftruth',
             'prompt',
             'instructions',
-            'username', 
-            'assistantname', 
-            'apikey', 
-            'model', 
-            'temperature', 
-            'maxlength', 
-            'topp', 
-            'frequency', 
+            'username',
+            'assistantname',
+            'apikey',
+            'model',
+            'temperature',
+            'maxlength',
+            'topp',
+            'frequency',
             'presence',
             'assistant'
         ];
@@ -85,6 +85,8 @@ class answer extends external_api {
         $model = get_config('block_openai_chat', 'model');
         $api_type = get_config('block_openai_chat', 'type');
         $engine_class = "\block_openai_chat\completion\\$api_type";
+        $history = [];
+        $thread_id = null;
 
         $completion = new $engine_class(...[$model, $message, $history, $block_settings, $thread_id]);
         $response = $completion->create_completion($context);
