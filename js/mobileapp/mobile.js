@@ -1,3 +1,4 @@
+var lastClickedEl = null;
 this.answer = function(result) {
     var msg = '';
     if (result.error == "") {
@@ -8,32 +9,42 @@ this.answer = function(result) {
     this.update_history(msg);
 };
 
+document.querySelectorAll(`#go`).forEach((btn) => {
+    btn.addEventListener('click', e => {
+        lastClickedEl = btn;
+    });
+});
+
 this.update_history = function(msg) {
-    let question = document.getElementById('openai_input').value;
+    let root = lastClickedEl.closest('#openai_block');
+    let log = root.querySelector('.logs');
+    let question = root.querySelector('#openai_input').value;
     if (question == '') {
     } else {
-        document.getElementById('openai_input').value = '';
-        document.getElementById('openai_chat_log').insertAdjacentHTML(
-             'beforeend',
-             '<div class="openai_message user"><span>' + question + '</span></div>' +
-             '<ion-item class="chat-loading">' +
-                 '<ion-spinner name="crescent"></ion-spinner>' +
-             '</ion-item>'
+        root.querySelector('#openai_input').value = '';
+        log.insertAdjacentHTML(
+            'beforeend',
+            '<div class="openai_message user"><span>' + question + '</span></div>' +
+            '<ion-item class="chat-loading">' +
+                '<ion-spinner name="crescent"></ion-spinner>' +
+            '</ion-item>'
         );
-        let lq = document.querySelector('#openai_chat_log > :last-child');
-        let container = document.querySelector('#openai_chat_log');
-        container.scrollTop = lq.offsetTop;
+        let lq = log.querySelector(':last-child');
+        log.scrollTop = lq.offsetTop;
     }
-    let assistantname = document.getElementById('openai_assistantname');
+    let assistantname = root.querySelector('#openai_assistantname');
     let newHtml = '<span style="color: gray; margin-bottom: .2em">' + assistantname.innerHTML + '</span><div class="openai_message bot"><span><p>' + msg + '</p></span></div>';
 
-    document.querySelector('.chat-loading').remove();
-    document.getElementById('openai_chat_log').insertAdjacentHTML('beforeend', newHtml);
-
-    let container = document.querySelector('#openai_chat_log');
-    let lastMessage = document.querySelector('#openai_chat_log div:last-child');
-    container.scrollTop = lastMessage.offsetTop;
+    log.querySelector('.chat-loading').remove();
+    log.insertAdjacentHTML('beforeend', newHtml);
+    let lastMessage = log.querySelector('div:last-child');
+    log.scrollTop = lastMessage.offsetTop;
 };
-document.querySelector(`.block_openai_chat #refresh`).addEventListener('click', e => {
-    document.querySelector(`#openai_chat_log`).innerHTML = ""
-})
+
+document.querySelectorAll(`.openai_input_refresh_btn`).forEach(function(btn) {
+    btn.addEventListener('click', e => {
+        document.querySelectorAll('.logs').forEach(function(log) {
+           log.innerHTML = "";
+        });
+    });
+});
